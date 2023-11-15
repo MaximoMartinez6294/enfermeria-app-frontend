@@ -6,12 +6,19 @@ const API_URL = `${BACKEND_URL}/api/products/`;
 
 // Create New Product
 const createProduct = async ( formData) => {
-  const response = await axios.post(`${API_URL}/add-product`, formData);
-  
-  
-  return response.data;
-  
-  
+  try {
+    const response = await axios.post(`${API_URL}add-product`, formData);
+    // Agrega un mensaje de registro para mostrar la respuesta del servidor
+    console.log('Respuesta del servidor al crear el producto:', response);
+
+    // Maneja la respuesta del servidor
+    console.log('Producto creado:', response.data);
+    return response.data;
+  } catch (error) {
+    // Maneja los errores, si los hay
+    console.error('Error al crear el producto:', error);
+    throw error;
+  }
 };
 
 console.log('API_URL:', API_URL);

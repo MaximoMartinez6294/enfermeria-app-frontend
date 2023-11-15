@@ -134,6 +134,7 @@ const ProductList = ({ products, isLoading }) => {
                     observaciones,
                     insumos, 
                   } = product;
+                  
                   return (
                     <tr key={_id}>
                       <td data-title="S/N" >{index + 1}</td>
@@ -147,9 +148,9 @@ const ProductList = ({ products, isLoading }) => {
                       <td data-title="Turnos">
                         {turnos}
                       </td >
-                      <td data-title="Cuidadores">{cuidadores}</td>
+                      <td data-title="Cuidadores">{cuidadores.join(', ')}</td>
                       <td data-title="Ved">{ved}</td>
-                      <td data-title="Enfermeros">{enfermeros}</td>
+                      <td data-title="Enfermeros">{enfermeros.join(', ')}</td>
                       <td data-title="Observaciones">{observaciones}</td>
                       <td data-title="Insumos">{insumos}</td>
 

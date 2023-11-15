@@ -29,47 +29,37 @@ const AddProduct = () => {
 
   const isLoading = useSelector(selectIsLoading);
 
-  const { 
-  name, 
-  estado,
-  direccion,
-  telefono,
-  horasDeCuidador, 
-  turnos, 
-  cuidadores, 
-  ved, 
-  enfermeros,
-  observaciones,
-  insumos,
- } = product;
-
   const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setProduct({ ...product, [name]: value });
-};
-
-  
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
 
   const saveProduct = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("estado", estado);
-    formData.append("direccion", direccion);
-    formData.append("telefono", telefono);
-    formData.append("horasDeCuidador", horasDeCuidador);
-    formData.append("turnos", turnos);
-    formData.append("cuidadores", cuidadores);
-    formData.append("ved", ved);
-    formData.append("enfermeros", enfermeros);
-    formData.append("observaciones", observaciones);
-    formData.append("insumos", insumos);
 
-    console.log(...formData);
+    try {
+      // Crear un objeto con los datos del producto
+      const formData = {
+        name: product.name,
+        estado: product.estado,
+        direccion: product.direccion,
+        telefono: product.telefono,
+        horasDeCuidador: product.horasDeCuidador,
+        turnos: product.turnos,
+        cuidadores: product.cuidadores,
+        ved: product.ved,
+        enfermeros: product.enfermeros,
+        observaciones: product.observaciones,
+        insumos: product.insumos,
+      };
 
-    await dispatch(createProduct(formData));
+      // Enviar el objeto directamente a través de dispatch
+      await dispatch(createProduct(formData));
 
-    navigate("/dashboard");
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+    }
   };
 
   return (

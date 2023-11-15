@@ -1,9 +1,9 @@
-
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "react-quill/dist/quill.snow.css";
 import Card from "../../card/Card";
 import productService from "../../../redux/features/product/productService";
+import cuidadorService from "../../../redux/features/cuidadores/cuidadoresService"; // Importa el servicio de cuidadores
+import enfermeroService from "../../../redux/features/enfermero/enfermeroService"
 import { toast } from "react-toastify";
 
 import "./ProductForm.scss";
@@ -16,22 +16,54 @@ const ProductForm = () => {
     telefono: "",
     horasDeCuidador: "",
     turnos: "",
-    cuidadores: "",
+    cuidadores: "", // Cambiar esto a un campo de selección (dropdown)
     ved: "",
-    enfermeros: "",
+    enfermeros: "", // Cambiar esto a un campo de selección (dropdown)
     observaciones: "",
     insumos: "",
   });
 
-
+  const [cuidadoresList, setCuidadoresList] = useState([]); // Lista de cuidadores
+  const [enfermerosList, setEnfermerosList] = useState([]); // Lista de enfermeros
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setProduct({ ...product, [name]: value });
   };
 
+  // Cargar la lista de cuidadores y enfermeros cuando se monta el componente
+  useEffect(() => {
+    const fetchCuidadores = async () => {
+      try {
+        const response = await cuidadorService.getCuidadores();
+        setCuidadoresList(response);
+      } catch (error) {
+        console.error("Error al cargar la lista de cuidadores:", error);
+      }
+    };
+
+    const fetchEnfermeros = async () => {
+      try {
+        const response = await enfermeroService.getEnfermeros();
+        setEnfermerosList(response);// Aquí debes hacer lo mismo para cargar la lista de enfermeros
+      } catch (error) {
+        console.error("Error al cargar la lista de enfermeros:", error);
+      }
+    };
+
+    fetchCuidadores();
+    fetchEnfermeros();
+  }, []); // El segundo argumento [] garantiza que esto solo se ejecute una vez al montar el componente
+
   const saveProduct = async (event) => {
     event.preventDefault();
+
+    const cuidadoresArray = Array.isArray(product.cuidadores)
+    ? product.cuidadores
+    : [product.cuidadores];
+    const enfermerosArray = Array.isArray(product.enfermeros)
+    ? product.enfermeros
+    : [product.enfermeros];
 
     try {
       // Recopilar los datos del formulario en un objeto formData
@@ -42,9 +74,9 @@ const ProductForm = () => {
         telefono: product.telefono,
         horasDeCuidador: product.horasDeCuidador,
         turnos: product.turnos,
-        cuidadores: product.cuidadores,
+        cuidadores: cuidadoresArray,
         ved: product.ved,
-        enfermeros: product.enfermeros,
+        enfermeros:  enfermerosArray,
         observaciones: product.observaciones,
         insumos: product.insumos,
       };
@@ -85,105 +117,116 @@ const ProductForm = () => {
 
   return (
     <div className="add-product">
-    <Card cardClass={"card"}>
-      <form onSubmit={saveProduct}>
-        <label>Nombre del paciente:</label>
-        <input
-          type="text"
-          placeholder="Nombre de paciente"
-          name="name"
-          value={product?.name}
-          onChange={handleInputChange}
-        />
+     <Card cardClass={"card"}>
+       <form onSubmit={saveProduct}>
+         <label>Nombre del paciente:</label>
+         <input
+           type="text"
+           placeholder="Nombre de paciente"
+           name="name"
+           value={product?.name}
+           onChange={handleInputChange}
+         />
 
          <label> Estado: </label>
-        <input
-          type="text"
-          placeholder="Estado"
-          name="estado"
-          value={product?.estado}
-          onChange={handleInputChange}
-        />
+         <input
+           type="text"
+           placeholder="Estado"
+           name="estado"
+           value={product?.estado}
+           onChange={handleInputChange}
+         />
 
-          <label> Dirección: </label>
-        <input
-          type="text"
-          placeholder="Dirección"
-          name="direccion"
-          value={product?.direccion}
-          onChange={handleInputChange}
-        />
+         <label> Dirección: </label>
+          <input
+            type="text"
+            placeholder="Dirección"
+            name="direccion"
+            value={product?.direccion}
+            onChange={handleInputChange}
+          />
 
           <label> Telefono: </label>
-        <input
-          type="text"
-          placeholder="Telefono"
-          name="telefono"
-          value={product?.telefono}
-          onChange={handleInputChange}
-        /> 
+          <input
+            type="text"
+            placeholder="Telefono"
+            name="telefono"
+            value={product?.telefono}
+            onChange={handleInputChange}
+          />
 
-         <label> Horas De Cuidador: </label>
-        <input
-          type="text"
-          placeholder="Horas De Cuidador"
-          name="horasDeCuidador"
-          value={product?.horasDeCuidador}
-          onChange={handleInputChange}
-        />
+          <label> Horas De Cuidador: </label>
+          <input
+            type="text"
+            placeholder="Horas De Cuidador"
+            name="horasDeCuidador"
+            value={product?.horasDeCuidador}
+            onChange={handleInputChange}
+          />
 
-        <label> Turnos:</label>
-        <input
-          type="text"
-          placeholder="Turnos"
-          name="turnos"
-          value={product?.turnos}
-          onChange={handleInputChange}
-        />
-          <label> Cuidadores:</label>
-        <input
-          type="text"
-          placeholder="cuidadores"
-          name="cuidadores"
-          value={product?.cuidadores}
-          onChange={handleInputChange}
-        />
+          <label> Turnos:</label>
+          <input
+            type="text"
+            placeholder="Turnos"
+            name="turnos"
+            value={product?.turnos}
+            onChange={handleInputChange}
+          />
+
+          <label>Cuidadores:</label>
+          <select
+            name="cuidadores"
+            value={product?.cuidadores}
+            onChange={handleInputChange}
+          >
+            <option value="">Selecciona un cuidador</option>
+            {cuidadoresList.map((cuidador) => (
+              <option key={cuidador.id} value={cuidador.id}>
+                {cuidador.name}
+              </option>
+            ))}
+          </select>
 
           <label>Ved:</label>
-        <input
-          type="text"
-          placeholder="Visitas enfermeras diarias"
-          name="ved"
-          value={product?.ved}
-          onChange={handleInputChange}
-        />
+          <input
+            type="text"
+            placeholder="Visitas enfermeras diarias"
+            name="ved"
+            value={product?.ved}
+            onChange={handleInputChange}
+          />
 
           <label>Enfermeros:</label>
-        <input
-          type="text"
-          placeholder="Enfermeros"
-          name="enfermeros"
-          value={product?.enfermeros}
-          onChange={handleInputChange}
-        />
+          <select
+            name="enfermeros"
+            value={product?.enfermeros}
+            onChange={handleInputChange}
+          >
+            <option value="">Selecciona un enfermero</option>
+            {enfermerosList.map((enfermero) => (
+              <option key={enfermero.id} value={enfermero.id}>
+                {enfermero.name}
+              </option>
+            ))}
+         </select>
 
           <label>Observaciones</label>
-        <input
-          type="text"
-          placeholder="Observaciones"
-          name="observaciones"
-          value={product?.observaciones}
-          onChange={handleInputChange}
-        />
+          <input
+            type="text"
+            placeholder="Observaciones"
+            name="observaciones"
+            value={product?.observaciones}
+            onChange={handleInputChange}
+          />
 
           <label>Insumos:</label>
-        <input
-          type="text"
-          placeholder="Insumos"
-          name="insumos"
-          value={product?.insumos}
-          onChange={handleInputChange}
-        />
+          <input
+            type="text"
+            placeholder="Insumos"
+            name="insumos"
+            value={product?.insumos}
+            onChange={handleInputChange}
+          />
           
           <div className="--my">
             <button type="submit" className="--btn --btn-primary">
