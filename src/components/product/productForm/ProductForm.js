@@ -22,6 +22,8 @@ const ProductForm = () => {
     observaciones: "",
     insumos: "",
   });
+  
+
 
   const [cuidadoresList, setCuidadoresList] = useState([]); // Lista de cuidadores
   const [enfermerosList, setEnfermerosList] = useState([]); // Lista de enfermeros
@@ -50,7 +52,6 @@ const ProductForm = () => {
         console.error("Error al cargar la lista de enfermeros:", error);
       }
     };
-
     fetchCuidadores();
     fetchEnfermeros();
   }, []); // El segundo argumento [] garantiza que esto solo se ejecute una vez al montar el componente
@@ -59,27 +60,28 @@ const ProductForm = () => {
     event.preventDefault();
 
     const cuidadoresArray = Array.isArray(product.cuidadores)
-    ? product.cuidadores
-    : [product.cuidadores];
-    const enfermerosArray = Array.isArray(product.enfermeros)
-    ? product.enfermeros
-    : [product.enfermeros];
+  ? product.cuidadores.map((cuidador) => cuidador.name)
+  : [product.cuidadores];
 
-    try {
-      // Recopilar los datos del formulario en un objeto formData
-      const formData = {
-        name: product.name,
-        estado: product.estado,
-        direccion: product.direccion,
-        telefono: product.telefono,
-        horasDeCuidador: product.horasDeCuidador,
-        turnos: product.turnos,
-        cuidadores: cuidadoresArray,
-        ved: product.ved,
-        enfermeros:  enfermerosArray,
-        observaciones: product.observaciones,
-        insumos: product.insumos,
-      };
+const enfermerosArray = Array.isArray(product.enfermeros)
+  ? product.enfermeros.map((enfermero) => enfermero.name)
+  : [product.enfermeros];
+
+  try {
+    // Recopilar los datos del formulario en un objeto formData
+    const formData = {
+      name: product.name,
+      estado: product.estado,
+      direccion: product.direccion,
+      telefono: product.telefono,
+      horasDeCuidador: product.horasDeCuidador,
+      turnos: product.turnos,
+      cuidadores: cuidadoresArray, // Mapear a objetos con el campo 'name'
+      ved: product.ved,
+      enfermeros: enfermerosArray, // Mapear a objetos con el campo 'name'
+      observaciones: product.observaciones,
+      insumos: product.insumos,
+    };
 
       console.log("Datos del formulario:", formData);
 
@@ -113,6 +115,7 @@ const ProductForm = () => {
       // Mostrar una notificación de error
       toast.error("Hubo un error al crear el paciente");
     }
+    
   };
 
   return (

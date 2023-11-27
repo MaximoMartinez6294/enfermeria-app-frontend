@@ -148,9 +148,9 @@ const ProductList = ({ products, isLoading }) => {
                       <td data-title="Turnos">
                         {turnos}
                       </td >
-                      <td data-title="Cuidadores">{cuidadores.join(', ')}</td>
+                      <td data-title="Cuidadores">{cuidadores.map((cuidador) => cuidador.name).join(', ')}</td>
                       <td data-title="Ved">{ved}</td>
-                      <td data-title="Enfermeros">{enfermeros.join(', ')}</td>
+                      <td data-title="Enfermeros">{enfermeros.map((enfermero) => enfermero.name).join(', ')}</td>
                       <td data-title="Observaciones">{observaciones}</td>
                       <td data-title="Insumos">{insumos}</td>
 
