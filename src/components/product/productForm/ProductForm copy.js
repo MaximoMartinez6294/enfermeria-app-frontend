@@ -3,7 +3,8 @@ import "react-quill/dist/quill.snow.css";
 import Card from "../../card/Card";
 import productService from "../../../redux/features/product/productService";
 import { toast } from "react-toastify";
-
+import cuidadorService from "../../../redux/features/cuidadores/cuidadoresService"; // Importa el servicio de cuidadores
+import enfermeroService from "../../../redux/features/enfermero/enfermeroService"
 import "../productForm/ProductForm copy.scss";
 
 const ProductFormCopy = ({ productToEdit }) => {
@@ -21,6 +22,34 @@ const ProductFormCopy = ({ productToEdit }) => {
     insumos: "",
   });
   console.log("productToEdit en EditProduct:", productToEdit);
+
+  
+  const [cuidadoresList, setCuidadoresList] = useState([]); // Lista de cuidadores
+  const [enfermerosList, setEnfermerosList] = useState([]); // Lista de enfermeros
+
+
+  // Cargar la lista de cuidadores y enfermeros cuando se monta el componente
+  useEffect(() => {
+    const fetchCuidadores = async () => {
+      try {
+        const response = await cuidadorService.getCuidadores();
+        setCuidadoresList(response);
+      } catch (error) {
+        console.error("Error al cargar la lista de cuidadores:", error);
+      }
+    };
+
+    const fetchEnfermeros = async () => {
+      try {
+        const response = await enfermeroService.getEnfermeros();
+        setEnfermerosList(response);// Aquí debes hacer lo mismo para cargar la lista de enfermeros
+      } catch (error) {
+        console.error("Error al cargar la lista de enfermeros:", error);
+      }
+    };
+    fetchCuidadores();
+    fetchEnfermeros();
+  }, []); // El segundo argumento [] garantiza que esto solo se ejecute una vez al montar el componente
 
   useEffect(() => {
     if (productToEdit) {
@@ -48,6 +77,13 @@ const ProductFormCopy = ({ productToEdit }) => {
 
   const updateProduct = async (event) => {
     event.preventDefault();
+    const cuidadoresArray = Array.isArray(product.cuidadores)
+    ? product.cuidadores.map((cuidador) => cuidador.name)
+    : [product.cuidadores];
+  
+  const enfermerosArray = Array.isArray(product.enfermeros)
+    ? product.enfermeros.map((enfermero) => enfermero.name)
+    : [product.enfermeros];
 
     try {
       // Recopilar los datos del formulario en un objeto formData
@@ -58,9 +94,9 @@ const ProductFormCopy = ({ productToEdit }) => {
         telefono: product.telefono,
         horasDeCuidador: product.horasDeCuidador,
         turnos: product.turnos,
-        cuidadores: product.cuidadores,
+        cuidadores: cuidadoresArray,
         ved: product.ved,
-        enfermeros: product.enfermeros,
+        enfermeros: enfermerosArray,
         observaciones: product.observaciones,
         insumos: product.insumos,
       };
@@ -152,14 +188,19 @@ const ProductFormCopy = ({ productToEdit }) => {
           value={product?.turnos}
           onChange={handleInputChange}
         />
-          <label> Cuidadores:</label>
-        <input
-          type="text"
-          placeholder="cuidadores"
-          name="cuidadores"
-          value={product?.cuidadores}
-          onChange={handleInputChange}
-        />
+          <label>Cuidadores:</label>
+          <select
+            name="cuidadores"
+            value={product?.cuidadores}
+            onChange={handleInputChange}
+          >
+            <option value="">Selecciona un cuidador</option>
+            {cuidadoresList.map((cuidador) => (
+              <option key={cuidador.id} value={cuidador.id}>
+                {cuidador.name}
+              </option>
+            ))}
+          </select>
 
           <label>Ved:</label>
         <input
@@ -171,13 +212,18 @@ const ProductFormCopy = ({ productToEdit }) => {
         />
 
           <label>Enfermeros:</label>
-        <input
-          type="text"
-          placeholder="Enfermeros"
-          name="enfermeros"
-          value={product?.enfermeros}
-          onChange={handleInputChange}
-        />
+          <select
+            name="enfermeros"
+            value={product?.enfermeros}
+            onChange={handleInputChange}
+          >
+            <option value="">Selecciona un enfermero</option>
+            {enfermerosList.map((enfermero) => (
+              <option key={enfermero.id} value={enfermero.id}>
+                {enfermero.name}
+              </option>
+            ))}
+         </select>
 
           <label>Observaciones</label>
         <input

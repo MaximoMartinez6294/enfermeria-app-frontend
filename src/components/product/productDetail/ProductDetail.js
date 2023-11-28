@@ -43,7 +43,7 @@ const ProductDetail = () => {
       <h3 className="--mt">Detalle del paciente</h3>
       <Card cardClass="card">
       {isLoading && <SpinnerImg />}
-{product ? (
+        {product ? (
           <div className="detail">
 
             <h4>Paciente: {(product.estado )}</h4 >
@@ -62,13 +62,13 @@ const ProductDetail = () => {
               <b>&rarr; Turnos  : </b> {product.turnos}
             </p>
             <p>
-              <b>&rarr; cuidadores  : </b> {product.cuidadores}
+              <b>&rarr; cuidadores : </b> {product.cuidadores.map((cuidador) => cuidador.name).join(', ')}
             </p>
             <p>
               <b>&rarr; ved  : </b> {product.ved}
             </p>
             <p>
-              <b>&rarr; enfermeros  : </b> {product.enfermeros}
+              <b>&rarr; enfermeros : </b> {product.enfermeros.map((enfermero) => enfermero.name).join(', ')}
             </p>
             <p>
               <b>&rarr; observaciones  : </b> {product.observaciones}

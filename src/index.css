@@ -55,6 +55,7 @@ section {
   max-width: 100%;
   margin: 0 auto;
   padding: 0 20px;
+  background-color: #E2E4E8;
 }
 
 .header {
@@ -309,6 +310,7 @@ p {
 }
 .--py2 {
   padding: 2rem 0;
+  background-color: #E2E4E8;
 }
 .--px {
   padding: 0 1rem;

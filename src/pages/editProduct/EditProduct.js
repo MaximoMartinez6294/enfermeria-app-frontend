@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
 import ProductFormCopy from "../../components/product/productForm/ProductForm copy";
+
+
 import {
   getProduct,
   getProducts,
@@ -52,7 +54,7 @@ const EditProduct = () => {
     formData.append("horasDeCuidador", product?.horasDeCuidador);
     formData.append("turnos", product?.turnos);
     formData.append("description", description);
-    formData.append("cuidadores", product?.horasDeCuidador);
+    formData.append("cuidadores", product?.cuidadores);
     formData.append("ved", product?.ved);
     formData.append("enfermeros", product?.enfermeros);
     formData.append("observaciones", product?.observaciones);

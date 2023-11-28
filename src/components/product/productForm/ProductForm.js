@@ -63,7 +63,7 @@ const ProductForm = () => {
   ? product.cuidadores.map((cuidador) => cuidador.name)
   : [product.cuidadores];
 
-const enfermerosArray = Array.isArray(product.enfermeros)
+ const enfermerosArray = Array.isArray(product.enfermeros)
   ? product.enfermeros.map((enfermero) => enfermero.name)
   : [product.enfermeros];
 

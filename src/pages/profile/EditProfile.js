@@ -99,7 +99,7 @@ const EditProfile = () => {
               <label>Email:</label>
               <input type="text" name="email" value={profile?.email} disabled />
               <br />
-              <code>El Email nose puede cambiar.</code>
+              <code>El Mail nose puede cambiar.</code>
             </p>
             <p>
               <label>Telefono:</label>
